@@ -15,5 +15,6 @@ I tested it on OpenCV version 2.3. 2.x might work well but are not tested.
 If you have any questions
 -------------------------
 If you have any questions, please feel free to contact me:
-* Masaki Saito "rezoolab at gmail"
+
+* Masaki Saito "rezoolab@gmail.com"
 

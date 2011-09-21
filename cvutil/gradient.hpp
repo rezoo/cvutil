@@ -26,11 +26,16 @@
 
 #include <opencv2/core/core.hpp>
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
 namespace cvutil {
 
 template<typename SrcType, typename DstType>
 void x_gradient(const cv::Mat_<SrcType>& src, cv::Mat_<DstType>& dst) {
     assert(src.size == dst.size);
+    #pragma omp parallel for schedule(dynamic)
     for(int y=0; y<src.rows; ++y) {
         const SrcType* src_x = &src(y, 0);
         DstType* dst_x = &dst(y, 0);
@@ -44,6 +49,7 @@ template<typename SrcType, typename DstType>
 void y_gradient(const cv::Mat_<SrcType>& src, cv::Mat_<DstType>& dst) {
     assert(src.size == dst.size);
     const std::size_t y_step = src.stepT();
+    #pragma omp parallel for schedule(dynamic)
     for(int y=1; y<(src.rows-1); ++y) {
         const SrcType* src_x = &src(y, 0);
         DstType* dst_x = &dst(y, 0);
@@ -66,6 +72,7 @@ void gradient(const cv::Mat_<SrcType>& src,
               cv::Mat_<cv::Point_<DstType> >& dst) {
     assert(src.size == dst.size);
     const std::size_t y_step = src.stepT();
+    #pragma omp parallel for schedule(dynamic)
     for(int y=1; y<(src.rows-1); ++y) {
         const SrcType* src_x = &src(y, 0);
         DstType* dst_x = &dst(y, 0);

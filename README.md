@@ -4,7 +4,7 @@ cvutil - Convenient algorithms for OpenCV
 An Introduction to cvutil
 -------------------------
 cvutil is the swiss army knife for coding some computer vision algorithms.
-cvutil organizes some general concepts. By using cvutil, you can easily parallelize your algorithms and write it as an intelligible.
+cvutil organizes some general concepts. By using cvutil, you can easily parallelize/optimize your algorithms and write it shortly.
 
 What you need to use cvutil
 ---------------------------

@@ -45,13 +45,13 @@ T reduce_image(const cv::Mat_<SrcType>& src, T init) {
     return reduce_image(src, init, std::plus<SrcType>());
 }
 
-#ifdef OPENMP_
 template<typename SrcType,
          typename T,
          typename BinaryFunction>
 T reduce_image(const cv::Mat_<SrcType>& src,
                T init,
                BinaryFunction binary_op) {
+#ifdef OPENMP_
     int size = src.rows;
     int max_blocks = omp_get_max_threads();
     int n_blocks = (size/2/max_blocks) > 0 ? max_blocks : size/2;
@@ -76,14 +76,7 @@ T reduce_image(const cv::Mat_<SrcType>& src,
         result[n_blocks] = binary_op(result[n_blocks], result[i]);
     }
     return result[n_blocks];
-}
 #else
-template<typename SrcType,
-         typename T,
-         typename BinaryFunction>
-T reduce_image(const cv::Mat_<SrcType>& src,
-               T init,
-               BinaryFunction binary_op) {
     T result = init;
     for(int y=0; y<src.rows; ++y) {
         const SrcType* src_x = src[y];
@@ -92,7 +85,7 @@ T reduce_image(const cv::Mat_<SrcType>& src,
         }
     }
     return result;
-}
 #endif
+}
 
 } // namespace cvutil

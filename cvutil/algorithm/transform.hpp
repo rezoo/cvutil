@@ -63,7 +63,7 @@ void transform_image(const cv::Mat_<SrcType1>& src1,
     for(int y=0; y<dst.rows; ++y) {
         const SrcType1* src1_x = src1[y];
         const SrcType2* src2_x = src2[y];
-        DstType* dst_x = dst.ptr<DstType>();
+        DstType* dst_x = dst[y];
         for(int x=0; x<dst.cols; ++x) {
             dst_x[x] = f(src1_x[x], src2_x[x]);
         }

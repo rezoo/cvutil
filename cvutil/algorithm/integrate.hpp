@@ -34,29 +34,29 @@ namespace cvutil {
 
 template<typename T,
          typename BinaryFunction>
-void scan_image(cv::Mat_<T>& src,
-                cv::mat_<T>& dst,
-                BinaryFunction f) {
+void integrate_image(cv::Mat_<T>& src,
+                     cv::Mat_<T>& dst,
+                     BinaryFunction f) {
     #pragma omp parallel for schedule(dynamic)
-    for(int y=0; y<img.rows; ++y) {
+    for(int y=0; y<src.rows; ++y) {
         dst(y, 0) = src(y, 0);
     }
 
     #pragma omp parallel for schedule(dynamic)
-    for(int y=0; y<img.rows; ++y) {
+    for(int y=0; y<src.rows; ++y) {
         T* src_x = src[y];
         T* dst_x = dst[y];
-        for(int x=1; x<img.cols; ++x) {
-            dst_x[x] = f(dst_x[x-1], src_x[x-1]);
+        for(int x=1; x<src.cols; ++x) {
+            dst_x[x] = f(dst_x[x-1], src_x[x]);
         }
     }
 
     const std::size_t step = src.step.p[0];
     #pragma omp parallel for schedule(dynamic)
-    for(int x=0; x<img.cols; ++x) {
+    for(int x=0; x<src.cols; ++x) {
         uchar* dst_py = (uchar*)&dst(1, x) - step;
         uchar* dst_y  = (uchar*)&dst(1, x);
-        for(int y=1; y<img.rows; ++y, dst_py += step, dst_y += step) {
+        for(int y=1; y<src.rows; ++y, dst_py += step, dst_y += step) {
             (T)(*dst_y) = f(*(T*)dst_py, *(T*)dst_y);
         }
     }

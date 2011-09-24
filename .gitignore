@@ -1,0 +1,6 @@
+# ignoreing scons database
+.sconsign.dblite
+
+# ignore object files and executables
+testings/all_test
+testings/*.o

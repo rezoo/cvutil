@@ -8,6 +8,7 @@ env = Environment(
     CPPPATH=[Dir(".")])
 env.ParseConfig("pkg-config --cflags --libs opencv")
 Export("env")
+Default(env.SConscript("testings/SConscript"))
 
 prefix = ARGUMENTS.get("prefix", "/usr/local")
 prefix_include = os.path.join(prefix, "include")

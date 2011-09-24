@@ -3,4 +3,5 @@
 Import("env")
 env.Append(LIBS=["gtest"])
 
-env.Program("all_test", Glob("*.cpp"))
+test_prog = env.Program("all_test", Glob("*.cpp"))
+Return("test_prog")

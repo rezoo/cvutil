@@ -42,9 +42,10 @@ void for_each_image(const cv::Mat_<SrcType>& src,
     #endif
     for(int y=0; y<src.rows; ++y) {
         SrcType* src_x = src[y];
-        std::for_each(src_x, src_x + src_cols, f);
+        for(int x=0; x<src.cols; ++x) {
+            f(src_x[x]);
+        }
     }
-    return f;
 }
 
 } // namespace cvutil

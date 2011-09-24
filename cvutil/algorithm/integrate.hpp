@@ -63,7 +63,7 @@ void integrate_image(cv::Mat_<T>& src,
         uchar* dst_py = (uchar*)&dst(1, x) - step;
         uchar* dst_y  = (uchar*)&dst(1, x);
         for(int y=1; y<src.rows; ++y, dst_py += step, dst_y += step) {
-            (T)(*dst_y) = f(*(T*)dst_py, *(T*)dst_y);
+            *(T*)dst_y = f(*(T*)dst_py, *(T*)dst_y);
         }
     }
 }

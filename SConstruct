@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
-env = Environment(CCFLAGS="-Wall -O2 -fopenmp", LIBS=["gtest", "gomp"], CPPPATH=["."])
+env = Environment(
+    CCFLAGS="-Wall -O2 -fopenmp -std=c++0x",
+    LIBS=["gtest", "gomp"],
+    CPPPATH=["."])
 env.ParseConfig("pkg-config --cflags --libs opencv")
 env.Program("testings/all_test", Glob("testings/*.cpp"))

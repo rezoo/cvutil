@@ -8,8 +8,8 @@
 TEST(algorithmTest, reduce_image)
 {
     cv::Mat_<int> src(10, 10);
-    for(int y=0; y<src.cols; ++y) {
-        for(int x=0; x<src.rows; ++x) {
+    for(int y=0; y<src.rows; ++y) {
+        for(int x=0; x<src.cols; ++x) {
             src(y, x) = y*src.cols + x;
         }
     }
@@ -19,8 +19,8 @@ TEST(algorithmTest, reduce_image)
 
     result1 = cvutil::reduce_image(src, (int)0);
     ASSERT_EQ(result1, result2);
-    //result1 = cvutil::reduce_image(src);
-    //ASSERT_EQ(result1, result2);
+    result1 = cvutil::reduce_image(src);
+    ASSERT_EQ(result1, result2);
 
     result1 = cvutil::reduce_image(
         src, (int)1, std::multiplies<int>());
@@ -28,3 +28,4 @@ TEST(algorithmTest, reduce_image)
         src.begin(), src.end(), (int)1, std::multiplies<int>());
     ASSERT_EQ(result1, result2);
 }
+

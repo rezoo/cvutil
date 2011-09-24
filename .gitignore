@@ -1,3 +1,6 @@
+# ignoreing vim swap files
+*.swp
+
 # ignoreing scons database
 .sconsign.dblite
 

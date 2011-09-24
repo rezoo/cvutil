@@ -170,7 +170,7 @@ void transform_image_uv(const cv::Mat_<SrcType1>& src1,
         const SrcType2* src2_x = src2[y];
         DstType* dst_x = dst[y];
         for(int x=0; x<dst.cols; ++x) {
-            dst_x[x] = f(src1_x[x], src2_x[x], x - cx, y - xy);
+            dst_x[x] = f(src1_x[x], src2_x[x], x - cx, y - cy);
         }
     }
 }

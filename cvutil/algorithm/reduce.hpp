@@ -28,22 +28,11 @@
 #include <functional>
 #include <opencv2/core/core.hpp>
 
-#ifdef OPENMP_
+#ifdef _OPENMP
 #include <omp.h>
 #endif
 
 namespace cvutil {
-
-template<typename SrcType>
-SrcType reduce_image(const cv::Mat_<SrcType>& src) {
-    return reduce_image(
-        src, static_cast<SrcType>(0), std::plus<SrcType>());
-}
-
-template<typename SrcType, typename T>
-T reduce_image(const cv::Mat_<SrcType>& src, T init) {
-    return reduce_image(src, init, std::plus<SrcType>());
-}
 
 template<typename SrcType,
          typename T,
@@ -51,31 +40,30 @@ template<typename SrcType,
 T reduce_image(const cv::Mat_<SrcType>& src,
                T init,
                BinaryFunction binary_op) {
-#ifdef OPENMP_
+#ifdef _OPENMP
     int size = src.rows;
     int max_blocks = omp_get_max_threads();
     int n_blocks = (size/2/max_blocks) > 0 ? max_blocks : size/2;
-    std::vector<T> result(n_blocks + 1);
-    result[n_blocks] = init;
+    std::vector<T> results(n_blocks + 1);
+    results[n_blocks] = init;
 
     #pragma omp parallel num_threads(n_blocks)
     {
         int thread_id = omp_get_thread_num();
-        T thread_sum();
-        #pragma omp for
-        for(int y=thread_id+n_blocks; i<src.rows; i+=n_blocks) {
+        T thread_sum = init;
+        for(int y=thread_id; y<src.rows; y+=n_blocks) {
             const SrcType* src_x = src[y];
             for(int x=0; x<src.cols; ++x) {
                 thread_sum = binary_op(thread_sum, src_x[x]);
             }
         }
-        result[thrad_id] = thread_sum;
+        results[thread_id] = thread_sum;
     }
 
     for(int i=0; i<n_blocks; ++i) {
-        result[n_blocks] = binary_op(result[n_blocks], result[i]);
+        results[n_blocks] = binary_op(results[n_blocks], results[i]);
     }
-    return result[n_blocks];
+    return results[n_blocks];
 #else
     T result = init;
     for(int y=0; y<src.rows; ++y) {
@@ -86,6 +74,17 @@ T reduce_image(const cv::Mat_<SrcType>& src,
     }
     return result;
 #endif
+}
+
+template<typename SrcType, typename T>
+T reduce_image(const cv::Mat_<SrcType>& src, T init) {
+    return reduce_image(src, init, std::plus<T>());
+}
+
+template<typename SrcType>
+SrcType reduce_image(const cv::Mat_<SrcType>& src) {
+    return reduce_image(
+        src, static_cast<SrcType>(0), std::plus<SrcType>());
 }
 
 } // namespace cvutil

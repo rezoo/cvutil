@@ -39,7 +39,9 @@ void transform_image(const cv::Mat_<SrcType>& src,
                      cv::Mat_<DstType>& dst,
                      UnaryFunction f) {
     assert(src.size == dst.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType* src_x = src[y];
         DstType* dst_x = dst[y];
@@ -59,7 +61,9 @@ void transform_image(const cv::Mat_<SrcType1>& src1,
                      BinaryFunction f) {
     assert(src1.size == dst.size);
     assert(src2.size == dst.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType1* src1_x = src1[y];
         const SrcType2* src2_x = src2[y];
@@ -83,7 +87,9 @@ void transform_image(const cv::Mat_<SrcType1>& src1,
     assert(src1.size == dst.size);
     assert(src2.size == dst.size);
     assert(src3.size == dst.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType1* src1_x = src1[y];
         const SrcType2* src2_x = src2[y];
@@ -102,7 +108,9 @@ void transform_image_xy(const cv::Mat_<SrcType>& src,
                         cv::Mat_<DstType>& dst,
                         CoordinateFunction f) {
     assert(src.size == dst.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType* src_x = src[y];
         DstType* dst_x = dst[y];
@@ -122,7 +130,9 @@ void transform_image_xy(const cv::Mat_<SrcType1>& src1,
                         CoordinateFunction f) {
     assert(src1.size == dst.size);
     assert(src2.size == dst.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType1* src1_x = src1[y];
         const SrcType2* src2_x = src2[y];
@@ -142,7 +152,9 @@ void transform_image_uv(const cv::Mat_<SrcType>& src,
     assert(src.size == dst.size);
     const int cx = dst.cols / 2;
     const int cy = dst.rows / 2;
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType* src_x = src[y];
         DstType* dst_x = dst[y];
@@ -164,7 +176,9 @@ void transform_image_uv(const cv::Mat_<SrcType1>& src1,
     assert(src2.size == dst.size);
     const int cx = dst.cols / 2;
     const int cy = dst.rows / 2;
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const SrcType1* src1_x = src1[y];
         const SrcType2* src2_x = src2[y];

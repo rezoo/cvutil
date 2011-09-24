@@ -40,7 +40,9 @@ ForwardIterator transform_image_if(const cv::Mat_<SrcType>& src,
                                    ForwardIterator result,
                                    UnaryFunction f,
                                    Predicate pred) {
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<src.rows; ++y) {
         const SrcType* src_x = src[y];
         for(int x=0; x<src.cols; ++x) {
@@ -64,7 +66,9 @@ ForwardIterator transform_image_if(const cv::Mat_<SrcType1>& src1,
                                    UnaryFunction f,
                                    Predicate pred) {
     assert(src1.size == src2.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<src1.rows; ++y) {
         const SrcType1* src1_x = src1[y];
         const SrcType2* src2_x = src2[y];

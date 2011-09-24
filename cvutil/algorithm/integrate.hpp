@@ -37,12 +37,16 @@ template<typename T,
 void integrate_image(cv::Mat_<T>& src,
                      cv::Mat_<T>& dst,
                      BinaryFunction f) {
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<src.rows; ++y) {
         dst(y, 0) = src(y, 0);
     }
 
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<src.rows; ++y) {
         T* src_x = src[y];
         T* dst_x = dst[y];
@@ -52,7 +56,9 @@ void integrate_image(cv::Mat_<T>& src,
     }
 
     const std::size_t step = src.step.p[0];
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int x=0; x<src.cols; ++x) {
         uchar* dst_py = (uchar*)&dst(1, x) - step;
         uchar* dst_y  = (uchar*)&dst(1, x);

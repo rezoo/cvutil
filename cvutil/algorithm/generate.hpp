@@ -34,7 +34,9 @@ namespace cvutil {
 
 template<typename DstType, typename Function>
 void generate_image(cv::Mat_<DstType>& dst, Function f) {
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         DstType* dst_x = dst[y];
         for(int x=0; x<dst.cols; ++x) {
@@ -46,7 +48,9 @@ void generate_image(cv::Mat_<DstType>& dst, Function f) {
 template<typename DstType, typename CoordinateFunction>
 void generate_image_xy(cv::Mat_<DstType>& dst,
                        CoordinateFunction f) {
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         DstType* dst_x = dst[y];
         for(int x=0; x<dst.cols; ++x) {
@@ -58,9 +62,11 @@ void generate_image_xy(cv::Mat_<DstType>& dst,
 template<typename DstType, typename CoordinateFunction>
 void generate_image_uv(cv::Mat_<DstType>& dst,
                        CoordinateFunction f) {
-    #pragma omp parallel for schedule(dynamic)
     const int cx = dst.cols / 2;
     const int cy = dst.rows / 2;
+    #ifdef _OPENMP
+    #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         DstType* dst_x = dst[y];
         for(int x=0; x<dst.cols; ++x) {

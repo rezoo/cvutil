@@ -35,10 +35,12 @@ namespace cvutil {
 template<typename T>
 void copy_image(const cv::Mat_<T>& src, cv::Mat_<T>& dst) {
     assert(src.size == dst.size);
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<dst.rows; ++y) {
         const T* src_x = src[y];
-        T* dst_x = &dst(y, 0);
+        T* dst_x = dst[y];
         for(int x=0; x<dst.cols; ++x) {
             dst_x[x] = src_x[x];
         }

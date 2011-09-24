@@ -24,7 +24,12 @@
 
 #pragma once
 
+#include <vector>
 #include <opencv2/core/core.hpp>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 namespace cvutil {
 
@@ -36,6 +41,7 @@ T transform_reduce_image(const cv::Mat_<SrcType>& src,
                          UnaryFunction unary_op,
                          T init,
                          BinaryFunction binary_op) {
+
     T result = init;
     for(int y=0; y<src.rows; ++y) {
         const SrcType* src_x = src[y];

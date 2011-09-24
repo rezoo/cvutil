@@ -37,7 +37,9 @@ template<typename SrcType, typename UnaryFunction>
 void for_each_image(const cv::Mat_<SrcType>& src,
                     UnaryFunction f) {
     const int src_cols = src.cols;
+    #ifdef _OPENMP
     #pragma omp parallel for schedule(dynamic)
+    #endif
     for(int y=0; y<src.rows; ++y) {
         SrcType* src_x = src[y];
         std::for_each(src_x, src_x + src_cols, f);

@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 
+import os
+
 env = Environment(
     CCFLAGS="-Wall -O2 -fopenmp -std=c++0x",
-    LIBS=["gtest", "gomp"],
-    CPPPATH=["."])
+    LIBS=["gomp"],
+    CPPPATH=[Dir(".")])
 env.ParseConfig("pkg-config --cflags --libs opencv")
-env.Program("testings/all_test", Glob("testings/*.cpp"))
+Export("env")
+
+prefix = ARGUMENTS.get("prefix", "/usr/local")
+prefix_include = os.path.join(prefix, "include")
+
+Alias("install", Install(prefix_include, Dir("cvutil")))

@@ -1,0 +1,6 @@
+# -*- coding: utf-8 -*-
+
+Import("env")
+env.Append(LIBS=["gtest"])
+
+env.Program("all_test", Glob("*.cpp"))

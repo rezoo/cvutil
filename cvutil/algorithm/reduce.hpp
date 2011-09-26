@@ -43,7 +43,7 @@ T reduce_image(const cv::Mat_<SrcType>& src,
 #ifdef _OPENMP
     const int size = src.rows;
     const int max_blocks = omp_get_max_threads();
-    const int n_blocks = (size/2/max_blocks) > 0 ? max_blocks : size/2;
+    const int n_blocks = (size/max_blocks) > 0 ? max_blocks : size;
     std::vector<T> results(n_blocks + 1);
     results[n_blocks] = init;
 

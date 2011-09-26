@@ -41,7 +41,31 @@ T transform_reduce_image(const cv::Mat_<SrcType>& src,
                          UnaryFunction unary_op,
                          T init,
                          BinaryFunction binary_op) {
+#ifdef _OPENMP
+    const int size = src.rows;
+    const int max_blocks = omp_get_max_threads();
+    const int n_blocks = (size/max_blocks) > 0 ? max_blocks : size;
+    std::vector<T> results(n_blocks + 1);
+    results[n_blocks] = init;
 
+    #pragma omp parallel num_threads(n_blocks)
+    {
+        const int thread_id = omp_get_thread_num();
+        T thread_sum = init;
+        for(int y=thread_id; y<src.rows; y+=n_blocks) {
+            const SrcType* src_x = src[y];
+            for(int x=0; x<src.cols; ++x) {
+                thread_sum = binary_op(thread_sum, unary_op(src_x[x]));
+            }
+        }
+        results[thread_id] = thread_sum;
+    }
+
+    for(int i=0; i<n_blocks; ++i) {
+        results[n_blocks] = binary_op(results[n_blocks], results[i]);
+    }
+    return results[n_blocks];
+#else
     T result = init;
     for(int y=0; y<src.rows; ++y) {
         const SrcType* src_x = src[y];
@@ -50,6 +74,7 @@ T transform_reduce_image(const cv::Mat_<SrcType>& src,
         }
     }
     return result;
+#endif 
 }
 
 template<typename SrcType1,
@@ -63,6 +88,33 @@ T transform_reduce_image(const cv::Mat_<SrcType1>& src1,
                          T init,
                          BinaryFunction2 binary_op2) {
     assert(src1.size == src2.size);
+#ifdef _OPENMP
+    const int size = src1.rows;
+    const int max_blocks = omp_get_max_threads();
+    const int n_blocks = (size/max_blocks) > 0 ? max_blocks : size;
+    std::vector<T> results(n_blocks + 1);
+    results[n_blocks] = init;
+
+    #pragma omp parallel num_threads(n_blocks)
+    {
+        const int thread_id = omp_get_thread_num();
+        T thread_sum = init;
+        for(int y=thread_id; y<src1.rows; y+=n_blocks) {
+            const SrcType1* src1_x = src1[y];
+            const SrcType2* src2_x = src2[y];
+            for(int x=0; x<src1.cols; ++x) {
+                thread_sum = binary_op2(
+                    thread_sum, binary_op1(src1_x[x], src2_x[x]));
+            }
+        }
+        results[thread_id] = thread_sum;
+    }
+
+    for(int i=0; i<n_blocks; ++i) {
+        results[n_blocks] = binary_op2(results[n_blocks], results[i]);
+    }
+    return results[n_blocks];
+#else
     T result = init;
     for(int y=0; y<src1.rows; ++y) {
         const SrcType1* src1_x = src1[y];
@@ -73,6 +125,7 @@ T transform_reduce_image(const cv::Mat_<SrcType1>& src1,
         }
     }
     return result;
+#endif
 }
 
 template<typename SrcType1,
@@ -89,6 +142,34 @@ T transform_reduce_image(const cv::Mat_<SrcType1>& src1,
                          BinaryFunction binary_op) {
     assert(src1.size == src2.size);
     assert(src2.size == src3.size);
+#ifdef _OPENMP
+    const int size = src1.rows;
+    const int max_blocks = omp_get_max_threads();
+    const int n_blocks = (size/max_blocks) > 0 ? max_blocks : size;
+    std::vector<T> results(n_blocks + 1);
+    results[n_blocks] = init;
+
+    #pragma omp parallel num_threads(n_blocks)
+    {
+        const int thread_id = omp_get_thread_num();
+        T thread_sum = init;
+        for(int y=thread_id; y<src1.rows; y+=n_blocks) {
+            const SrcType1* src1_x = src1[y];
+            const SrcType2* src2_x = src2[y];
+            const SrcType3* src3_x = src3[y];
+            for(int x=0; x<src1.cols; ++x) {
+                thread_sum = binary_op(
+                    thread_sum, ternary_op(src1_x[x], src2_x[x], src3_x[x]));
+            }
+        }
+        results[thread_id] = thread_sum;
+    }
+
+    for(int i=0; i<n_blocks; ++i) {
+        results[n_blocks] = binary_op(results[n_blocks], results[i]);
+    }
+    return results[n_blocks];
+#else
     T result = init;
     for(int y=0; y<src1.rows; ++y) {
         const SrcType1* src1_x = src1[y];
@@ -100,6 +181,7 @@ T transform_reduce_image(const cv::Mat_<SrcType1>& src1,
         }
     }
     return result;
+#endif
 }
 
 } // namespace cvutil

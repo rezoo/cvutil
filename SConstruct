@@ -3,7 +3,7 @@
 import os
 
 env = Environment(
-    CCFLAGS="-Wall -O2 -fopenmp -std=c++0x",
+    CCFLAGS="-Wall -g -O0 -fopenmp -std=c++0x",
     LIBS=["gomp"],
     CPPPATH=[Dir(".")])
 env.ParseConfig("pkg-config --cflags --libs opencv")

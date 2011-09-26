@@ -24,15 +24,46 @@
 
 #pragma once
 
-#include "algorithm/copy.hpp"
-#include "algorithm/count.hpp"
-#include "algorithm/for_each.hpp"
-#include "algorithm/generate.hpp"
-#include "algorithm/inner_product.hpp"
-#include "algorithm/integrate.hpp"
-#include "algorithm/minmax.hpp"
-#include "algorithm/reduce.hpp"
-#include "algorithm/transform.hpp"
-#include "algorithm/transform_if.hpp"
-#include "algorithm/transform_reduce.hpp"
+#include <functional>
+#include <opencv2/core/core.hpp>
+#include "transform_reduce.hpp"
 
+#ifdef _OPENMP
+#include <omp.h>
+#endif
+
+namespace cvutil {
+namespace detail {
+
+template<typename UnaryPredicate>
+struct count_if_functor {
+public:
+    count_if_functor(UnaryPredicate f): unary_pred_(f) {};
+
+    template<typename T>
+    std::size_t operator()(const T& x) {
+        return unary_pred_(x) ? 1 : 0;
+    }
+private:
+    UnaryPredicate unary_pred_;
+};
+
+} // namespace detail
+
+template<typename SrcType, typename UnaryPredicate>
+std::size_t count_image_if(const cv::Mat_<SrcType>& src,
+                           UnaryPredicate unary_pred) {
+    return transform_reduce_image(
+        src,
+        detail::count_if_functor<UnaryPredicate>(unary_pred),
+        (std::size_t)0, 
+        std::plus<std::size_t>());
+}
+
+template<typename SrcType>
+std::size_t count_image(const cv::Mat_<SrcType>& src, SrcType value) {
+    return count_image_if(
+        src, std::bind1st(std::equal_to<SrcType>(), value));
+}
+
+} // namespace cvutil

@@ -28,10 +28,6 @@
 #include <opencv2/core/core.hpp>
 #include "transform_reduce.hpp"
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
-
 namespace cvutil {
 namespace detail {
 

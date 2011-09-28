@@ -21,8 +21,12 @@ TEST(algorithmTest, minmax_image)
         }
     }
     std::pair<int, int> result = cvutil::minmax_element_image(src);
+    int min_result = cvutil::min_element_image(src);
+    int max_result = cvutil::max_element_image(src);
     ASSERT_EQ(result.first, 0);
     ASSERT_EQ(result.second, (width - 1)*(height - 1));
+    ASSERT_EQ(result.first, min_result);
+    ASSERT_EQ(result.second, max_result);
 
     int min = std::numeric_limits<int>::max();
     int max = std::numeric_limits<int>::min();
@@ -35,6 +39,10 @@ TEST(algorithmTest, minmax_image)
         }
     }
     result = cvutil::minmax_element_image(src);
+    min_result = cvutil::min_element_image(src);
+    max_result = cvutil::max_element_image(src);
     ASSERT_EQ(result.first, min);
     ASSERT_EQ(result.second, max);
+    ASSERT_EQ(result.first, min_result);
+    ASSERT_EQ(result.second, max_result);
 }

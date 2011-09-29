@@ -68,9 +68,9 @@ SrcType min_element_image(const cv::Mat_<SrcType>& src,
         return results[0];
     }
 #else
-    T result = src(0, 0);
+    SrcType result = src(0, 0);
     for(int y=0; y<src.rows; ++y) {
-        const T* src_x = src[y];
+        const SrcType* src_x = src[y];
         for(int x=0; x<src.cols; ++x) {
             if(comp(src_x[x], result))
                 result = src_x[x];
@@ -134,10 +134,10 @@ std::pair<SrcType, SrcType> minmax_element_image(const cv::Mat_<SrcType>& src,
         return results[0];
     }
 #else
-    T min_result = src(0, 0);
-    T max_result = min_result;
+    SrcType min_result = src(0, 0);
+    SrcType max_result = min_result;
     for(int y=0; y<src.rows; ++y) {
-        const T* src_x = src[y];
+        const SrcType* src_x = src[y];
         for(int x=0; x<src.cols; ++x) {
             if(comp(src_x[x], min_result))
                 min_result = src_x[x];

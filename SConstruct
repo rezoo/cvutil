@@ -3,10 +3,11 @@
 import os
 
 env = Environment(
-    CCFLAGS="-Wall -g -O0 -fopenmp -std=c++0x",
+    CCFLAGS="-g -O0 -fopenmp -std=c++0x",
     LIBS=["gomp"],
     CPPPATH=[Dir(".")])
 env.ParseConfig("pkg-config --cflags --libs opencv")
+env.Append(CCFLAGS=" -Wall -W -Wextra -Wformat=2 -Wcast-qual -Wcast-align -Wconversion -Wfloat-equal -Wpointer-arith")
 Export("env")
 Default(env.SConscript("testings/SConscript"))
 

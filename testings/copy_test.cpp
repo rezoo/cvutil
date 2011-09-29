@@ -1,9 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <stdlib.h>
-#include <functional>
 #include <algorithm>
-#include <utility>
 #include <opencv2/core/core.hpp>
 
 #include <cvutil/algorithm/copy.hpp>

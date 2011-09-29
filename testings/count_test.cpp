@@ -1,7 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <functional>
-#include <numeric>
 #include <opencv2/core/core.hpp>
 #include <cvutil/algorithm/count.hpp>
 

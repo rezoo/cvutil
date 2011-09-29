@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <functional>
 #include <algorithm>
 #include <opencv2/core/core.hpp>
 

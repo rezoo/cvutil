@@ -51,7 +51,6 @@ template<typename T>
 void show_image(const cv::Mat_<T>& img, const std::string& title) {
     cv::Mat_<T> tmp_img(img.rows, img.cols);
     std::pair<T, T> m = cvutil::minmax_element_image(img);
-    const double delta = m.second - m.first;
 
     if(m.first == m.second) return;
 
